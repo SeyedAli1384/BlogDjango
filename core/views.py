@@ -1,12 +1,8 @@
 from django.shortcuts import render
-
-blogs = [
-    {'id' : 1 , 'name' : 'Learn x with y'},
-    {'id' : 2 , 'name' : 'How x live in y situation'},
-    {'id' : 3 , 'name' : 'What x do and its benefits'},
-]
+from .models import Blog
 
 def home(request):
+    blogs = Blog.objects.all()
     context = {'blog' : blogs}
     return render(request , 'core/home.html' , context)
 
@@ -14,9 +10,9 @@ def about(request):
     return render(request , 'core/about.html')
 
 def blog(request , pk):
-    blog = None
+    blogs = Blog.objects.all()
     for i in blogs:
-        if i['id'] == int(pk):
+        if i.author == str(pk):
             blog = i    
     context = {'blg' : blog}
     return render(request , 'core/blog.html' , context)
