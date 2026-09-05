@@ -1,6 +1,9 @@
 {% extends "main.html" %}
 
 {% block content %}
-<h1>{{blg.title}} by {{blg.author}}</h1>
+<h2>Topic: {{blg.topic}}</h2>
+<h2>{{blg.title}} by {{blg.author}}</h2>
 <h3>{{blg.blog}}</h3>
+<hr>
+<h4>source: {{blg.source}}</h4>
 {% endblock %}

@@ -10,9 +10,6 @@ def about(request):
     return render(request , 'core/about.html')
 
 def blog(request , pk):
-    blogs = Blog.objects.all()
-    for i in blogs:
-        if i.author == str(pk):
-            blog = i    
+    blog = Blog.objects.get(id = pk)
     context = {'blg' : blog}
     return render(request , 'core/blog.html' , context)

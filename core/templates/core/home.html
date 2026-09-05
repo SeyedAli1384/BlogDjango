@@ -7,7 +7,7 @@
     <div>
         {% for blg in blog %}
             <div>
-                <h5><a href="{% url 'blog' blg.author %}">{{blg.title}} by {{blg.author}}</a></h5>
+                <h5><a href="{% url 'blog' blg.id %}">{{blg.title}} by {{blg.author}}</a></h5>
             </div>
         {% endfor %}
     </div>
