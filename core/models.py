@@ -18,6 +18,9 @@ class Blog(models.Model):
     blog = models.TextField()
     source = models.TextField(null=True , blank=True)
     
+    class Meta:
+        ordering = ['-updated' , '-created']
+    
     def __str__(self):
         return f"{self.title} created by {self.author}"
     
