@@ -1,10 +1,20 @@
 from django.shortcuts import render , redirect
-from .models import Blog
+from django.db.models import Q
+from .models import Blog , Topic
 from .forms import BlogForm
 
 def home(request):
-    blogs = Blog.objects.all()
-    context = {'blog' : blogs}
+    q = request.GET.get('q') if request.GET.get('q') != None else ''
+    blogs = Blog.objects.filter(
+        Q(topic__name__icontains=q) |
+        Q(title__icontains=q) |
+        Q(author__username__icontains=q)
+        )
+    
+    topics = Topic.objects.all()
+    blog_count = blogs.count()
+    
+    context = {'blog' : blogs , 'topics' : topics , 'blog_count' : blog_count}
     return render(request , 'core/home.html' , context)
 
 def about(request):

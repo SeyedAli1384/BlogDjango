@@ -1,22 +1,49 @@
 {% extends "main.html" %}
 
 {% block content %}
-<h1>Home Template</h1>
 
-<div>
+<style>
+    .home-container{
+        display: grid;
+        grid-template-columns: 1fr 3fr;
+    }
+</style>
 
-    <a href="{% url 'create-blog' %}">Create Blog</a>
-    <hr>
+<div class="home-container">
+    
     <div>
-        {% for blg in blog %}
+        <h3>Browes Topic</h3>
+        <hr>
+        
+        <div>
+            <a href="{% url 'home' %}">All</a>
+        </div>
+
+        {% for topic in topics %}
             <div>
-                <h5><a href="{% url 'blog' blg.id %}">{{blg.title}} by {{blg.author}}</a></h5>
-                <h5><a href="{% url 'update-blog' blg.id %}">Edit Blog</a></h5>
-                <h5><a href="{% url 'delete-blog' blg.id %}">Delete</a></h5>
-                <hr>
+                <a href="{% url 'home' %}?q={{topic.name}}">{{topic.name}}</a>
             </div>
         {% endfor %}
     </div>
+    
+    <div>
+        <h1>Blog</h1>
+        <div>
+            <h4>- {{blog_count}} - total Blogs</h4>
+            <a href="{% url 'create-blog' %}">Create Blog</a>
+            <hr>
+            <div>
+                {% for blg in blog %}
+                <div>
+                    <h5><a href="{% url 'blog' blg.id %}">{{blg.title}} by {{blg.author}}</a></h5>
+                    <h5><a href="{% url 'update-blog' blg.id %}">Edit Blog</a></h5>
+                    <h5><a href="{% url 'delete-blog' blg.id %}">Delete</a></h5>
+                    <hr>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
 </div>
-
+    
 {% endblock %}
