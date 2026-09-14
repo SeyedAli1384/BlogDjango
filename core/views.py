@@ -2,11 +2,14 @@ from django.shortcuts import render , redirect
 from django.contrib import messages
 from django.db.models import Q
 from django.contrib.auth import authenticate , login , logout
-from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required
 from .models import Blog , Topic
 from .forms import BlogForm
 
 def loginPage(request):
+    if request.user.is_authenticated:
+        return redirect('home')
+    
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
@@ -50,6 +53,7 @@ def blog(request , pk):
     context = {'blg' : blog}
     return render(request , 'core/blog.html' , context)
 
+@login_required(login_url='login')
 def createblog(request):
     form = BlogForm()
     if request.method == 'POST':
@@ -61,9 +65,15 @@ def createblog(request):
     context = {'form' : form}
     return render(request , 'core/blog_form.html' , context)
 
+@login_required(login_url='login')
 def updateblog(request , pk):
     blog = Blog.objects.get(id=pk)
     form = BlogForm(instance=blog)
+    
+    if request.user != blog.author:
+        messages.error(request, 'You are not authorized to update this blog.')
+        return redirect('home')
+    
     if request.method == 'POST':
         form = BlogForm(request.POST , instance=blog)
         if form.is_valid():
@@ -73,8 +83,14 @@ def updateblog(request , pk):
     context = {'form' : form}
     return render(request , 'core/blog_form.html' , context)
 
+@login_required(login_url='login')
 def deleteblog(request , pk):
     blog = Blog.objects.get(id=pk)
+    
+    if request.user != blog.author:
+            messages.error(request, 'You are not authorized to update this blog.')
+            return redirect('home')
+    
     if request.method == 'POST':
         blog.delete()
         return redirect('home')

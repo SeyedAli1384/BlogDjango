@@ -36,8 +36,10 @@
                 {% for blg in blog %}
                 <div>
                     <h5><a href="{% url 'blog' blg.id %}">{{blg.title}} by {{blg.author}}</a></h5>
+                    {% if request.user == blg.author %}
                     <h5><a href="{% url 'update-blog' blg.id %}">Edit Blog</a></h5>
                     <h5><a href="{% url 'delete-blog' blg.id %}">Delete</a></h5>
+                    {% endif %}
                     <hr>
                 </div>
                 {% endfor %}
