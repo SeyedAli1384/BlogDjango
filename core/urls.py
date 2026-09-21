@@ -5,10 +5,13 @@ urlpatterns = [
     path('login/' , views.loginPage , name='login'),
     path('register/' , views.registerPage , name='register'),
     path('logout/' , views.logoutUser , name='logout'),
+    
     path('' , views.home , name="home"),
     path('about/' , views.about , name="about"),
     path('blog/<str:pk>/' , views.blog , name="blog"),
+    
     path('create-blog/' , views.createblog , name="create-blog"),
     path('update-blog/<str:pk>/' , views.updateblog , name="update-blog"),
     path('delete-blog/<str:pk>/' , views.deleteblog , name="delete-blog"),
+    path('delete-comment/<str:pk>/' , views.deletecomments , name="delete-comment"),
 ]

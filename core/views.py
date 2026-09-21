@@ -4,7 +4,7 @@ from django.db.models import Q
 from django.contrib.auth import authenticate , login , logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
-from .models import Blog , Topic
+from .models import Blog , Topic , Comments
 from .forms import BlogForm
 
 def loginPage(request):
@@ -70,7 +70,18 @@ def about(request):
 
 def blog(request , pk):
     blog = Blog.objects.get(id = pk)
-    context = {'blg' : blog}
+    blog_comments = blog.comments_set.all().order_by('-created')
+    participants = blog.Participants.all()
+    if request.method == "POST":
+        comment = Comments.objects.create(
+            user = request.user,
+            blog = blog,
+            body = request.POST.get('body')
+        )
+        blog.Participants.add(request.user)
+        return redirect('blog' , pk = blog.id)
+    
+    context = {'blg' : blog , 'blog_comments' : blog_comments , 'participants' : participants}
     return render(request , 'core/blog.html' , context)
 
 @login_required(login_url='login')
@@ -115,3 +126,16 @@ def deleteblog(request , pk):
         blog.delete()
         return redirect('home')
     return render(request , 'core/delete.html' , {'obj' : blog})
+
+@login_required(login_url='login')
+def deletecomments(request , pk):
+    comment = Comments.objects.get(id=pk)
+    
+    if request.user != comment.user:
+            messages.error(request, 'You are not authorized to update this blog.')
+            return redirect('home')
+    
+    if request.method == 'POST':
+        comment.delete()
+        return redirect('home')
+    return render(request , 'core/delete.html' , {'obj' : comment}) 

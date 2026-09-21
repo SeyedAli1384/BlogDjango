@@ -13,6 +13,7 @@ class Blog(models.Model):
     topic = models.ForeignKey(Topic , on_delete=models.SET_NULL , null=True , blank=True)
     author = models.ForeignKey(User , on_delete=models.SET_NULL , null=True)
     title = models.CharField(max_length=30)
+    Participants = models.ManyToManyField(User,related_name='participants' , blank=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     blog = models.TextField()
