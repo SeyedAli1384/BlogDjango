@@ -61,8 +61,11 @@ def home(request):
     
     topics = Topic.objects.all()
     blog_count = blogs.count()
+    blog_comments = Comments.objects.filter(Q(blog__topic__name__icontains=q))
     
-    context = {'blog' : blogs , 'topics' : topics , 'blog_count' : blog_count}
+    context = {'blog' : blogs , 'topics' : topics , 
+               'blog_count' : blog_count , 
+               'blog_comments' : blog_comments}
     return render(request , 'core/home.html' , context)
 
 def about(request):
@@ -70,7 +73,7 @@ def about(request):
 
 def blog(request , pk):
     blog = Blog.objects.get(id = pk)
-    blog_comments = blog.comments_set.all().order_by('-created')
+    blog_comments = blog.comments_set.all()
     participants = blog.Participants.all()
     if request.method == "POST":
         comment = Comments.objects.create(
