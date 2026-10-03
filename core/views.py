@@ -4,7 +4,7 @@ from django.db.models import Q
 from django.contrib.auth import authenticate , login , logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
-from .models import Blog , Topic , Comments
+from .models import Blog , Topic , Comments , User
 from .forms import BlogForm
 
 def loginPage(request):
@@ -86,6 +86,14 @@ def blog(request , pk):
     
     context = {'blg' : blog , 'blog_comments' : blog_comments , 'participants' : participants}
     return render(request , 'core/blog.html' , context)
+
+def userProfile(request , pk):
+    user = User.objects.get(id=pk)
+    blogs = user.blog_set.all()
+    blog_comments = user.comments_set.all()
+    topics = Topic.objects.all()
+    context = {'user' : user , 'blog' : blogs , 'blog_comments' : blog_comments , 'topics' : topics}
+    return render(request , 'core/profile.html' , context)
 
 @login_required(login_url='login')
 def createblog(request):

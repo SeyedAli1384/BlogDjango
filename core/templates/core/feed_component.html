@@ -1,5 +1,6 @@
 {% for blg in blog %}
 <div>
+    <a href="{% url 'profile' blg.author.id %}">@{{blg.author.username}}</a>
     <h5><a href="{% url 'blog' blg.id %}">{{blg.title}} by {{blg.author}}</a></h5>
     {% if request.user == blg.author %}
     <h5><a href="{% url 'update-blog' blg.id %}">Edit Blog</a></h5>
