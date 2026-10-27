@@ -1,3 +1,5 @@
+import hashlib
+from django.core.cache import cache
 from django.shortcuts import render , redirect
 from django.contrib import messages
 from django.db.models import Q
@@ -52,21 +54,58 @@ def registerPage(request):
     return render(request , 'core/login_register.html' , context)
 
 def home(request):
-    q = request.GET.get('q') if request.GET.get('q') != None else ''
-    blogs = Blog.objects.filter(
-        Q(topic__name__icontains=q) |
-        Q(title__icontains=q) |
-        Q(author__username__icontains=q)
+    q = (request.GET.get("q") or "").strip()
+    cache_version = cache.get("home:cache_version", 1)
+    query_hash = hashlib.sha256(q.lower().encode()).hexdigest()
+    cache_key = f"home:v{cache_version}:search:{query_hash}"
+
+    cached_data = cache.get(cache_key)
+
+    if cached_data is None:
+        blog_ids = list(
+            Blog.objects.filter(
+                Q(topic__name__icontains=q)
+                | Q(title__icontains=q)
+                | Q(author__username__icontains=q)
+            ).values_list("pk", flat=True)
         )
-    
-    topics = Topic.objects.all()
-    blog_count = blogs.count()
-    blog_comments = Comments.objects.filter(Q(blog__topic__name__icontains=q))
-    
-    context = {'blog' : blogs , 'topics' : topics , 
-               'blog_count' : blog_count , 
-               'blog_comments' : blog_comments}
-    return render(request , 'core/home.html' , context)
+
+        topic_ids = list(Topic.objects.values_list("pk", flat=True))
+
+        comment_ids = list(
+            Comments.objects.filter(
+                Q(blog__topic__name__icontains=q)
+            ).values_list("pk", flat=True)
+        )
+
+        cached_data = {
+            "blog_ids": blog_ids,
+            "topic_ids": topic_ids,
+            "comment_ids": comment_ids,
+        }
+
+        cache.set(cache_key, cached_data, timeout=300)
+
+    blog_ids = cached_data["blog_ids"]
+
+    blogs = Blog.objects.filter(pk__in=blog_ids).order_by(
+        "-updated", "-created"
+    )
+
+    topics = Topic.objects.filter(pk__in=cached_data["topic_ids"])
+
+    blog_comments = Comments.objects.filter(
+        pk__in=cached_data["comment_ids"]
+    )
+
+    context = {
+        "blog": blogs,
+        "topics": topics,
+        "blog_count": len(blog_ids),
+        "blog_comments": blog_comments,
+    }
+
+    return render(request, "core/home.html", context)
 
 def about(request):
     return render(request , 'core/about.html')
