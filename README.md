@@ -1,6 +1,6 @@
-# DigiMarket — Django Blog Platform
+# DigiBlog — Django Blog Platform
 
-DigiMarket is a Django-based blogging application built as a learning project to practise backend development, database-backed web applications, authentication, and containerized deployment.
+Digilog is a Django-based blogging application built as a learning project to practise backend development, database-backed web applications, authentication, and containerized deployment.
 
 The project began as my own implementation. AI tools assisted with the later frontend redesign and documentation. I am continuing to learn, review, and improve the codebase.
 
@@ -210,7 +210,3 @@ This project provides practice with:
 - SQLite is used for the current database configuration.
 - Production deployment would require a separate review of settings, secrets, database backups, monitoring, and operational security.
 - AI tools assisted with the frontend redesign and documentation; the project is still subject to ongoing review and learning.
-
-## License
-
-No license has been specified yet. All rights are reserved by default unless a license is added to the repository.
