@@ -1,6 +1,33 @@
 {% extends "main.html" %}
 
 {% block content %}
-<h1>About Template</h1>
+<section class="about-page">
+    <div class="about-hero">
+        <span class="topic-badge">About the project</span>
+        <h1>Ideas deserve a place to grow.</h1>
+        <p>
+            DigiMarket is a blog platform where people can publish ideas,
+            explore topics, and take part in discussions.
+        </p>
+    </div>
 
+    <div class="about-grid">
+        <article class="about-card">
+            <h2>Publish</h2>
+            <p>Create and manage your own blog posts.</p>
+        </article>
+
+        <article class="about-card">
+            <h2>Explore</h2>
+            <p>Discover posts by topic and search for content.</p>
+        </article>
+
+        <article class="about-card">
+            <h2>Discuss</h2>
+            <p>Share feedback through comments and conversations.</p>
+        </article>
+    </div>
+
+    <a class="button" href="{% url 'home' %}">Explore blogs</a>
+</section>
 {% endblock %}

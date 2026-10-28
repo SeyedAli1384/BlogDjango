@@ -1,12 +1,22 @@
-        <h3>Browes Topic</h3>
-        <hr>
-        
-        <div>
-            <a href="{% url 'home' %}">All</a>
-        </div>
+<section class="sidebar-section">
+    <h3 class="sidebar-heading">
+        <span>Explore Topics</span>
+        <span class="sidebar-count">{{ topics|length }}</span>
+    </h3>
+
+    <nav class="topic-list" aria-label="Blog topics">
+        <a class="topic-link {% if not request.GET.q %}active{% endif %}"
+           href="{% url 'home' %}">
+            <span>All topics</span>
+        </a>
 
         {% for topic in topics %}
-            <div>
-                <a href="{% url 'home' %}?q={{topic.name}}">{{topic.name}}</a>
-            </div>
+            <a class="topic-link {% if request.GET.q == topic.name %}active{% endif %}"
+               href="{% url 'home' %}?q={{ topic.name|urlencode }}">
+                <span>{{ topic.name }}</span>
+            </a>
+        {% empty %}
+            <p class="sidebar-empty">No topics available yet.</p>
         {% endfor %}
+    </nav>
+</section>

@@ -1,12 +1,29 @@
 {% extends "main.html" %}
 
 {% block content %}
+<section class="form-page">
+    <div class="form-card delete-card">
+        <div class="delete-icon">!</div>
 
-<form action="" method="post">
-    {% csrf_token %}
-    <p>Are you sure you want to delete "{{obj}}"?</p>
-    <a href="{{request.META.HTTP_REFERER}}">Go back</a>
-    <input type="submit" value="Confirm">
-</form>
+        <h1>Confirm deletion</h1>
+        <p class="form-subtitle">
+            Are you sure you want to delete
+            <strong>{{ obj }}</strong>?
+        </p>
+        <p class="delete-warning">
+            This action may not be reversible.
+        </p>
 
+        <form action="" method="post" class="delete-actions">
+            {% csrf_token %}
+            <a class="button button-secondary"
+               href="{{ request.META.HTTP_REFERER|default:'/' }}">
+                Cancel
+            </a>
+            <button class="button-danger" type="submit">
+                Confirm delete
+            </button>
+        </form>
+    </div>
+</section>
 {% endblock content %}

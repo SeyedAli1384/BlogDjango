@@ -1,11 +1,36 @@
 {% for blg in blog %}
-<div>
-    <a href="{% url 'profile' blg.author.id %}">@{{blg.author.username}}</a>
-    <h5><a href="{% url 'blog' blg.id %}">{{blg.title}} by {{blg.author}}</a></h5>
-    {% if request.user == blg.author %}
-    <h5><a href="{% url 'update-blog' blg.id %}">Edit Blog</a></h5>
-    <h5><a href="{% url 'delete-blog' blg.id %}">Delete</a></h5>
+<article class="blog-card">
+    <div class="blog-card-header">
+        <a class="author" href="{% url 'profile' blg.author.id %}">
+            @{{ blg.author.username }}
+        </a>
+    </div>
+
+    <h3 class="blog-title">
+        <a href="{% url 'blog' blg.id %}">
+            {{ blg.title }}
+        </a>
+    </h3>
+
+    <p class="blog-byline">
+        Published by {{ blg.author }}
+    </p>
+
+    {% if blg.topic %}
+    <span class="topic-badge">{{ blg.topic }}</span>
     {% endif %}
-    <hr>
+
+    {% if request.user == blg.author %}
+    <div class="blog-actions">
+        <a href="{% url 'update-blog' blg.id %}">Edit</a>
+        <a class="delete-link" href="{% url 'delete-blog' blg.id %}">Delete</a>
+    </div>
+    {% endif %}
+</article>
+{% empty %}
+<div class="blog-card empty-state">
+    <h3>No blogs yet</h3>
+    <p>Be the first to share something with the community.</p>
+    <a class="button" href="{% url 'create-blog' %}">Create a blog</a>
 </div>
 {% endfor %}

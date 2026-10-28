@@ -1,6 +1,8 @@
-<hr>
-
-<a href="{% url 'about' %}">
-    <h1>about</h1>
-</a>
-
+<footer class="site-footer">
+    <a class="footer-brand" href="{% url 'home' %}">DigiMarket</a>
+    <p>Ideas, discussions, and knowledge shared by the community.</p>
+    <a href="{% url 'about' %}">About this project</a>
+    <p class="footer-copyright">
+        © {% now "Y" %} DigiMarket
+    </p>
+</footer>

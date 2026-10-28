@@ -1,37 +1,57 @@
 {% extends "main.html" %}
 
 {% block content %}
+<section class="form-page">
+    <div class="form-card auth-card">
+        {% if page == 'login' %}
+            <h1>Welcome back</h1>
+            <p class="form-subtitle">Sign in to continue to DigiMarket.</p>
 
-{% if page == 'login' %}
-<div>
-    <form action="" method="post">
-        {% csrf_token %}
-        
-        <label>Username:</label>
-        <input type="text" name="username" placeholder="Enter Username">
-        
-        <label>Password:</label>
-        <input type="password" name="password" placeholder="Enter Password">
-        
-        <input type="submit" value="Login">
-    </form>
-    
-    <p>Haven't Signed Up yet?</p>
-    <a href="{% url 'register' %}">Sign up</a>
-</div>
-{% else %}
- <div>
-    <form action="" method="post">
-        {% csrf_token %}
-        
-        {{form.as_p}}
-        
-        <input type="submit" value="Register">
-    </form>
-    
-    <p>Already Signed Up?</p>
-    <a href="{% url 'login' %}">Sign In</a>
-</div>
-{% endif %}
+            <form action="" method="post" class="styled-form">
+                {% csrf_token %}
 
+                <label for="username">Username</label>
+                <input
+                    id="username"
+                    type="text"
+                    name="username"
+                    placeholder="Enter username"
+                    autocomplete="username"
+                    required
+                >
+
+                <label for="password">Password</label>
+                <input
+                    id="password"
+                    type="password"
+                    name="password"
+                    placeholder="Enter password"
+                    autocomplete="current-password"
+                    required
+                >
+
+                <button type="submit">Sign in</button>
+            </form>
+
+            <p class="form-switch">
+                Don't have an account?
+                <a href="{% url 'register' %}">Create one</a>
+            </p>
+        {% else %}
+            <h1>Create your account</h1>
+            <p class="form-subtitle">Join the DigiMarket community.</p>
+
+            <form action="" method="post" class="styled-form">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit">Create account</button>
+            </form>
+
+            <p class="form-switch">
+                Already have an account?
+                <a href="{% url 'login' %}">Sign in</a>
+            </p>
+        {% endif %}
+    </div>
+</section>
 {% endblock content %}

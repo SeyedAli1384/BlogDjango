@@ -1,15 +1,22 @@
-<a href="{% url 'home' %}">
-    <h1>LOGO</h1>
-</a>
+<nav class="navbar">
+    <a class="brand" href="{% url 'home' %}">Digi Blog</a>
 
-<form action="{% url 'home' %}" method="GET">
-    <input type="text" name="q" placeholder="Search Blogs...">
-</form>
+    <form class="nav-search" action="{% url 'home' %}" method="GET">
+        <input
+            type="text"
+            name="q"
+            placeholder="Search blogs..."
+            aria-label="Search blogs"
+        >
+        <button type="submit">Search</button>
+    </form>
 
-{% if request.user.is_authenticated %}
-<p>Hello {{request.user}}</p>
-<a href="{% url 'logout' %}">Logout</a>
-{% else %}
-<a href="{% url 'login' %}">Login</a>
-{% endif %}
-<hr>
+    <div class="nav-user">
+        {% if request.user.is_authenticated %}
+            <span>Hello, {{ request.user.username }}</span>
+            <a href="{% url 'logout' %}">Logout</a>
+        {% else %}
+            <a href="{% url 'login' %}">Login</a>
+        {% endif %}
+    </div>
+</nav>

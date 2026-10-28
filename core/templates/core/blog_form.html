@@ -1,13 +1,21 @@
 {% extends 'main.html' %}
 
 {% block content %}
+<section class="form-page">
+    <div class="form-card">
+        <a class="back-link" href="{% url 'home' %}">&larr; Back to blogs</a>
 
-<div>
-    <form action="" method="post">
-        {% csrf_token %}
-        {{form.as_p}}
-        <input type="submit" value="Submit">
-    </form>
-</div>
+        <h1>Write something worth sharing</h1>
+        <p class="form-subtitle">
+            Create a new blog post or update an existing one.
+        </p>
 
+        <form action="" method="post" class="styled-form">
+            {% csrf_token %}
+            {{ form.as_p }}
+
+            <button type="submit">Save blog</button>
+        </form>
+    </div>
+</section>
 {% endblock %}

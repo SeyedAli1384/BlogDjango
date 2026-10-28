@@ -1,57 +1,97 @@
 {% extends "main.html" %}
 
 {% block content %}
-<style>
-    .blog-container{
-        display: grid;
-        grid-template-columns: 3fr 1fr;
-    }
-</style>
+<div class="blog-container">
+    <section class="blog-detail">
+        <article class="blog-detail-card">
+            {% if blg.topic %}
+                <span class="topic-badge">{{ blg.topic }}</span>
+            {% endif %}
 
-<div class="blog-container"> 
-    <div>
-        <h2>Topic: {{blg.topic}}</h2>
-        <h2>{{blg.title}} by {{blg.author}}</h2>
-        <h3>{{blg.blog}}</h3>
-        <hr>
-        <h4>source: {{blg.source}}</h4>
-        
-        <div class="comment-wrapper">
-            <h3>Comment Section</h3>
-            <hr>
+            <h1 class="detail-title">{{ blg.title }}</h1>
+
+            <p class="detail-byline">
+                Published by
+                <a href="{% url 'profile' blg.author.id %}">
+                    @{{ blg.author.username }}
+                </a>
+            </p>
+
+            <div class="blog-content">{{ blg.blog }}</div>
+
+            {% if blg.source %}
+                <p class="blog-source">
+                    <strong>Source:</strong> {{ blg.source }}
+                </p>
+            {% endif %}
+        </article>
+
+        <section class="comment-section">
+            <h2>Discussion</h2>
+            <p class="section-subtitle">
+                Join the conversation about this blog.
+            </p>
 
             {% for comment in blog_comments %}
-            <div>
-                {% if request.user == comment.user %}
-                <a href="{% url 'delete-comment' comment.id %}">Delete</a>
-                {% endif %}
-                <small>{{comment.user}}     {{comment.created | timesince}} ago</small>
-                <p>{{comment.body}}</p>
-                <hr>
-            </div>
+                <article class="comment-card">
+                    <div class="comment-header">
+                        <div>
+                            <strong>{{ comment.user }}</strong>
+                            <span class="comment-time">
+                                {{ comment.created|timesince }} ago
+                            </span>
+                        </div>
+
+                        {% if request.user == comment.user %}
+                            <a class="delete-link"
+                               href="{% url 'delete-comment' comment.id %}">
+                                Delete
+                            </a>
+                        {% endif %}
+                    </div>
+
+                    <p class="comment-body">{{ comment.body }}</p>
+                </article>
+            {% empty %}
+                <div class="empty-state comment-empty">
+                    <p>No comments yet. Start the discussion.</p>
+                </div>
             {% endfor %}
 
-        </div>
+            {% if request.user.is_authenticated %}
+                <form class="comment-form" action="" method="post">
+                    {% csrf_token %}
+                    <label for="comment-body">Write a comment</label>
+                    <textarea
+                        id="comment-body"
+                        name="body"
+                        rows="3"
+                        placeholder="Share your thoughts..."
+                        required
+                    ></textarea>
+                    <button type="submit">Post comment</button>
+                </form>
+            {% else %}
+                <p class="login-prompt">
+                    <a href="{% url 'login' %}">Log in</a> to join the discussion.
+                </p>
+            {% endif %}
+        </section>
+    </section>
 
-        {% if request.user.is_authenticated %}
-        <div class="comment-form">
-            <form action="" method="post">
-                {% csrf_token %}
-                <input type="text" name="body" placeholder="Write your Comments here...">
-            </form>
-        </div>
-        {% endif %}
-    </div>
-    
-    <div>
-        <h3>Participants:</h3>
-        <hr>
-        {% for prtcpants in  participants%}
-            <div>
-                <p>{{prtcpants.username}}</p>
+    <aside class="participants-panel">
+        <h2 class="sidebar-heading">Participants</h2>
+
+        {% for prtcpants in participants %}
+            <div class="participant-item">
+                <span class="participant-avatar">
+                    {{ prtcpants.username|slice:":1"|upper }}
+                </span>
+                <span>{{ prtcpants.username }}</span>
             </div>
+        {% empty %}
+            <p class="sidebar-empty">No participants yet.</p>
         {% endfor %}
-    </div>
-
+    </aside>
 </div>
 {% endblock %}
